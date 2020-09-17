@@ -1,14 +1,20 @@
 const request = require('request')
 const geocode = require('./utils/geocode')
 const forecast = require('./utils/forecast')
+const yargs = require('yargs')
 
-forecast(40.7178,-74.0431, (error, data) => {
-    console.log('Error: ', error)
-    console.log('current temperature: ', data.temperature)
-    console.log('chance of rain: ', data.precip)
-})
+console.log(process.argv[2])
 
-geocode('Boston', (error, data) => {
-    console.log('Error: ', error)
-    console.log('Data: ', data)
+geocode(process.argv[2], (error, data) => {
+    if (error) {
+        return console.log('geocode error: ', error)
+    } 
+    forecast(data.latitude,data.longitude, (error, forecastData) => {
+        if (error) {
+            return console.log('forecast error: ', error)
+        }
+
+        console.log('location: ', data.location)
+        console.log('temperature: ', forecastData.data.temperature)
+    })
 })
