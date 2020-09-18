@@ -1,22 +1,27 @@
 const path = require('path')
 const express = require('express')
-
+const image = '../public/img/me.png'
 const app = express()
 console.log(path.join(__dirname, '../public'))
 
+// import '../public/img/me.png'
 const publicDirectoryPath = path.join(__dirname, '../public')
+app.set('view engine', 'hbs')
 app.use(express.static(publicDirectoryPath));
 
 
-app.get('/help', (req, res) => {
-    res.send({
-        name: 'Sherif',
-        age: 22
+app.get('', (req, res) => {
+    res.render('index', {
+        title: 'Weather app',
+        name: 'Sherif'
     })
 })
 
 app.get('/about', (req, res) => {
-    res.send('<h1>About</h1>')
+    res.render('about', {
+        title: 'About Page',
+        img: image
+    })
 })
 
 app.get('/weather', (req, res) => {
