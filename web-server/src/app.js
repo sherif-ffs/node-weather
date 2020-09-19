@@ -29,6 +29,7 @@ app.get('', (req, res) => {
 app.get('/about', (req, res) => {
     res.render('about', {
         title: 'About Page',
+        name: 'Sherif',
         img: image
     })
 })
@@ -41,9 +42,23 @@ app.get('/help', (req, res) => {
 })
 
 app.get('/weather', (req, res) => {
+    console.log('req.query.search: ', req.query.search)
+    if (!req.query.address) {
+        return res.send({
+            error: 'You must provide a search term'
+        })
+    }
+
     res.send({
         forecast: 'forecast',
-        location: 'location'
+        location: 'location',
+        address: req.query.address
+    })
+})
+
+app.get('/products', (req, res) => {
+    res.send({
+        products: []
     })
 })
 
