@@ -2,6 +2,8 @@ const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
 const image = '../public/img/me.png'
+const geocode = require('./utils/geocode')
+const forecast = require('./utils/forecast')
 
 const app = express()
 
@@ -42,18 +44,32 @@ app.get('/help', (req, res) => {
 })
 
 app.get('/weather', (req, res) => {
-    console.log('req.query.search: ', req.query.search)
     if (!req.query.address) {
         return res.send({
             error: 'You must provide a search term'
         })
     }
 
-    res.send({
-        forecast: 'forecast',
-        location: 'location',
-        address: req.query.address
+    let forecastData,
+    location
+
+    geocode(req.query.address, (error, data) => {
+        if (error) {
+            return console.log('geocode error: ', error)
+        } 
+
+        forecast(req.query.address, (error, forecastData) => {
+            if (error) {
+                return console.log('forecast error: ', error)
+            }
+            res.send({
+                forecast: data.location,
+                location: forecastData.data.temperature,
+                address: req.query.address
+            })
+        })
     })
+
 })
 
 app.get('/products', (req, res) => {
